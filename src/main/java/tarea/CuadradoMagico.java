@@ -42,7 +42,19 @@ public class CuadradoMagico {
             }
         }
     }
-    
+
+    public void mostrarMatriz() {
+
+        for (int i = 0; i < matriz.length; i++) {
+
+            for (int j = 0; j < matriz[i].length; j++) {
+
+                System.out.print(matriz[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+
     private int sumarFila(int fila) {
 
 //        /**
@@ -63,11 +75,12 @@ public class CuadradoMagico {
             return -1;
         } else {
             int resultado = 0;
-
-            for (int i = 0; i < matriz[fila].length; i++) {
+            int i;
+            for (i = 0; i < matriz[fila].length; i++) {
 
                 resultado += matriz[fila][i];
             }
+
             return resultado;
         }
     }
@@ -97,7 +110,8 @@ public class CuadradoMagico {
         } else {
             int resultado = 0;
 
-            for (int i = 0; i < matriz.length; i++) {
+            int i;
+            for (i = 0; i < matriz.length; i++) {
 
                 resultado += matriz[i][columna];
             }
@@ -106,41 +120,64 @@ public class CuadradoMagico {
         }
     }
 
-    public void sumarDiagonalPrincipal() {
+    public int sumarDiagonalPrincipal() {
 
+        int resultado = 0;
+
+        for (int i = 0; i < matriz.length; i++) {
+
+            for (int j = 0; j < matriz[i].length; j++) {
+
+                if (i + j == matriz.length - 1) {//para filtrar que esta en la diagonal
+                    resultado += matriz[i][j];
+                }
+            }
+        }
+
+        return resultado;
     }
 
-    public void sumarDiagonalSecundaria() {
+    public int sumarDiagonalSecundaria() {
 
+        int resultado = 0;
+
+        for (int i = 0; i < matriz.length; i++) {
+
+            resultado += matriz[i][i];
+        }
+
+        return resultado;
     }
 
     public boolean isMagic() {
 
         //creamos array para almacenar los datos de las sumas tanto de filas
         //como de columnas
-        int[] sumaFilas = new int[this.matriz.length];
-        int[] sumaColumnas = new int[this.matriz.length];
-
-        boolean filas = analizarFilas(sumaFilas);
-        boolean columnas = analizarColumnas(sumaColumnas);
-        boolean dP = false, dS = false;
+        boolean filas = analizarFilas();
+        boolean columnas = analizarColumnas();
+        boolean dP = sumarDiagonalPrincipal() == 10;
+        boolean dS = sumarDiagonalSecundaria() == 10;
 
         if (filas && columnas && dP && dS) {
+
             return true;
         } else {
+
             return false;
         }
     }
 
-    private boolean analizarFilas(int[] sumaFilas) {
+    private boolean analizarFilas() {
 
         boolean filas = false;
+
+        int[] sumaFilas = new int[this.matriz.length];
 
         //recorremos cada una de las filas y almacenamos su resultado
         for (int i = 0; i < matriz.length; i++) {
 
             sumaFilas[i] = this.sumarFila(i);
-            
+
             /**
              * Una vez hemos sumado todas las filas, comprobamos que odas y cada
              * una de ellas su suma sea igual a 10, para asi poner que la matriz
@@ -160,8 +197,33 @@ public class CuadradoMagico {
         }
     }
 
-    private boolean analizarColumnas(int[] sumaColumnas) {
-        return false;
+    private boolean analizarColumnas() {
 
+        boolean columnas = false;
+
+        int[] sumaColumnas = new int[this.matriz.length];
+
+        //recorremos cada una de las columnas y almacenamos su resultado
+        for (int i = 0; i < matriz.length; i++) {
+
+            sumaColumnas[i] = this.sumarColumna(i);
+
+            /**
+             * Una vez hemos sumado todas las filas, comprobamos que odas y cada
+             * una de ellas su suma sea igual a 10, para asi poner que la matriz
+             * cumple este requisito para ser cuadrado magico
+             */
+            if (sumaColumnas[i] == 10) {
+                columnas = true;
+            } else {
+                columnas = false;
+            }
+        }
+
+        if (columnas) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
